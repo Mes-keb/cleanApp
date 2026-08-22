@@ -77,4 +77,12 @@ class DuplicateCleanerApp:
                         self.duplicates[filepath] = hash_map[file_hash]
                     else:
                         hash_map[file_hash] = filepath
-                        
+
+        if not self.duplicates:
+            messagebox.showinfo("result", "no duplicate files found.")
+            return
+
+        # Display Duplicates
+        for dup, orig in self.duplicates.items():
+            size_kb = os.path.getsize(dup) // 1024
+            self.tree.insert("", "end", values=(dup, size_kb))
