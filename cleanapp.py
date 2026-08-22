@@ -16,6 +16,9 @@ def get_file_hash(filepath):
     except:
         return None  
 
+
+
+
 # --- Main App Class ---
 class DuplicateCleanerApp:
     def __init__(self, root):
@@ -31,11 +34,14 @@ class DuplicateCleanerApp:
         frame = tk.Frame(self.root, padx=10, pady=10)
         frame.pack(fill="x")
 
+
+
+
         tk.Label(frame, text="Select Folder:", font=('Arial', 12)).pack(side="left")
         tk.Entry(frame, textvariable=self.folder_path, width=50).pack(side="left", padx=5)
         tk.Button(frame, text="Browse", command=self.browse_folder).pack(side="left")
         tk.Button(self.root, text="Scan for Duplicates", command=self.scan_duplicates,
-          bg="#4CAF50", fg="white").pack(pady=10)
+          bg="#83C8D8", fg="white").pack(pady=10)
         # --- Treeview for results ---
         columns = ("#1", "#2")
         self.tree = ttk.Treeview(self.root, columns=columns, show="headings", height=15)
@@ -44,7 +50,31 @@ class DuplicateCleanerApp:
         self.tree.column("#1", width=500)
         self.tree.column("#2", width=100, anchor="center")
         self.tree.pack(padx=10, pady=10)
+    tk.Button(self.root, text="Delete Selected", command=self.delete_selected,
+          bg="#83C8D8", fg="white").pack(pady=5)
 
-        tk.Button(self.root, text="Delete Selected", command=self.delete_selected,
-          bg="#83C8D8", fg="white").pack(pady=10)
-        
+    def browse_folder(self):
+        folder = filedialog.askdirectory()
+        if folder:
+            self.folder_path.set(folder)
+
+    def scan_duplicates(self):
+        folder = self.folder_path.get()
+        if not folder:
+            messagebox.showwarning("warning", "please select a folder first!")
+            return
+
+        self.tree.delete(*self.tree.get_children())
+        self.duplicates.clear()
+        hash_map = {}
+
+        for root_dir, _, files in os.walk(folder):
+            for filename in files:
+                filepath = os.path.join(root_dir, filename)
+                file_hash = get_file_hash(filepath)
+                if file_hash:
+                    if file_hash in hash_map:
+                        self.duplicates[filepath] = hash_map[file_hash]
+                    else:
+                        hash_map[file_hash] = filepath
+                        
