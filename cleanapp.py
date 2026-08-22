@@ -86,3 +86,5 @@ class DuplicateCleanerApp:
         for dup, orig in self.duplicates.items():
             size_kb = os.path.getsize(dup) // 1024
             self.tree.insert("", "end", values=(dup, size_kb))
+
+        messagebox showinfo/"Scan Complete" f"Found {len(self.duplicates)} duplicate files."
