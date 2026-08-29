@@ -35,8 +35,6 @@ class DuplicateCleanerApp:
         frame.pack(fill="x")
 
 
-
-
         tk.Label(frame, text="Select Folder:", font=('Arial', 12)).pack(side="left")
         tk.Entry(frame, textvariable=self.folder_path, width=50).pack(side="left", padx=5)
         tk.Button(frame, text="Browse", command=self.browse_folder).pack(side="left")
@@ -88,3 +86,21 @@ class DuplicateCleanerApp:
             self.tree.insert("", "end", values=(dup, size_kb))
 
         messagebox showinfo/"Scan Complete" f"Found {len(self.duplicates)} duplicate files."
+
+    def delete_selected(self):
+        selected_items = self.tree.selection()
+        if not selected_items:
+            messagebox.showwarning("Warning", "Please select files to delete.")
+            return
+
+        comfirm = messagebox.askyesno("Comirm", "Are you sure you want to delete selected duplicates?")
+        if not comfirm:
+            return
+
+        for item in selected_items:
+            file_path = self.tree.item(item, "values")[0]
+            try:
+                os.remove(file_path)
+                self.tree.delete(item)
+            except Exception as e:
+                
