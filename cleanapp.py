@@ -103,4 +103,13 @@ class DuplicateCleanerApp:
                 os.remove(file_path)
                 self.tree.delete(item)
             except Exception as e:
-                
+                messagebox.showerror("Error", f"Failed to delete {file_path\n{e}}")
+
+        messagebox.showinfo("Deleted", "Selected files have been deleted.")
+
+# --- Run App ---
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = DuplicateCleanerApp(root)
+    root.mainloop()
+    
